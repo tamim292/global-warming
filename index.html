@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Global warming in 221 stripes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Literata:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9eef0;--ink:#10222c;--muted:#4b5f69;--rule:#b3c1c8;--hot:#c73e2b;--bar:#10222c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a21;--ink:#e4ecef;--muted:#9fb2bb;--rule:#2b3d46;--hot:#ef7a63;--bar:#e4ecef}}
+:root[data-theme="dark"]{--bg:#0d1a21;--ink:#e4ecef;--muted:#9fb2bb;--rule:#2b3d46;--hot:#ef7a63;--bar:#e4ecef}
+*,*::before,*::after{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.7 Literata,Georgia,serif}
+.wrap{max-width:62rem;margin:0 auto;padding:0 1.25rem}
+h1,h2,.sans{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif}
+h1{font-weight:800;font-size:clamp(2.5rem,7.5vw,5.8rem);line-height:.97;letter-spacing:-.035em;margin:2.8rem 0 1.1rem;max-width:14ch}
+.lede{max-width:36rem;margin:0 0 1.6rem;font-size:1.2rem}
+h2{font-weight:800;font-size:clamp(1.7rem,4.2vw,2.7rem);line-height:1.06;letter-spacing:-.02em;margin:0 0 1rem;max-width:21ch}
+section{padding:5rem 0 0}
+#heat{position:fixed;left:0;top:0;width:6px;height:100vh;z-index:9;transform-origin:top;transform:scaleY(0);background:linear-gradient(#1f4e79,#5b93c0 25%,#e8975a 60%,#c73e2b 80%,#3d0612)}
+.stripes{position:relative;width:100%}
+canvas{display:block;width:100%;height:clamp(260px,56vh,560px);cursor:crosshair;touch-action:pan-y}
+canvas.short{height:clamp(150px,28vh,260px)}
+.mark{position:absolute;top:0;bottom:0;background:var(--ink);pointer-events:none;opacity:0}
+.chip{position:absolute;bottom:.8rem;background:var(--bg);color:var(--ink);padding:.35rem .7rem;font:800 1rem/1 "Bricolage Grotesque",sans-serif;pointer-events:none}
+.legend{height:.8rem;margin:1rem 0 .4rem;background:linear-gradient(90deg,#1f4e79,#5b93c0,#cfdfe8,#f2d9b4,#e8975a,#c73e2b,#8e1a1c)}
+.lg{display:flex;justify-content:space-between;font:500 .95rem/1.3 "Bricolage Grotesque",sans-serif;color:var(--muted)}
+.read{min-height:3.4rem;font:500 1.1rem/1.4 "Bricolage Grotesque",sans-serif;margin:1rem 0 0}
+.picker{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.2rem 0}
+.picker button{flex:1 1 9rem;text-align:left;background:none;border:0;border-top:3px solid var(--rule);padding:.7rem .2rem 0;color:var(--muted);cursor:pointer;font:500 .95rem/1.3 "Bricolage Grotesque",sans-serif}
+.picker button strong{display:block;font-size:1.9rem;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.picker button[aria-checked="true"]{border-top-color:var(--hot);color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--hot);outline-offset:3px}
+.scn{max-width:40rem}.scn p{margin:.2rem 0}
+.band{background:var(--ink);color:var(--bg);margin-top:5rem;padding:4.5rem 0}
+.big{font:800 clamp(2.8rem,11vw,8.5rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:.6rem 0}
+.band p{max-width:40rem;margin:0 0 1rem}
+.band .sub{font:500 1.1rem/1.4 "Bricolage Grotesque",sans-serif;opacity:.8}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font:500 12px "Bricolage Grotesque",sans-serif;fill:var(--muted)}
+.flood{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.ctl{display:flex;align-items:baseline;gap:1rem;margin:1rem 0 .4rem}
+.ctl output{font:800 3.2rem/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.03em;min-width:5.5rem}
+input[type=range]{width:100%;accent-color:var(--hot);height:2rem}
+.pre{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0 1rem}
+.pre button{border:1px solid var(--ink);background:none;color:var(--ink);padding:.45rem .8rem;font:500 .95rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+.pre button:hover{background:var(--ink);color:var(--bg)}
+#fl{min-height:5.5rem;margin:0}
+#w{transition:transform .4s ease}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:3rem}.two p{margin:0 0 1rem}
+.bars{font:500 1rem/1.3 "Bricolage Grotesque",sans-serif}
+.row{display:grid;grid-template-columns:8.5rem 1fr;gap:.9rem;align-items:center;margin:.6rem 0}
+.row i{display:block;height:1.5rem;background:var(--bar);transform-origin:left;transform:scaleX(var(--s,1))}.row i.hot{background:var(--hot)}
+.bars small{font-size:.9rem;color:var(--muted)}
+.do p{max-width:38rem;margin:0 0 1.1rem}
+footer{margin-top:5rem;border-top:1px solid var(--rule);padding:1.6rem 0 3rem;font-size:.9rem;color:var(--muted)}footer p{max-width:46rem;margin:0 0 .6rem}
+@media (max-width:760px){.two,.flood{grid-template-columns:1fr;gap:1.2rem}.row{grid-template-columns:6.5rem 1fr}body{font-size:1.05rem}.chip{font-size:.85rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<div id="heat" aria-hidden="true"></div>
+<div class="wrap">
+<h1>Earth is heating up. Each stripe is one year.</h1>
+<p class="lede">Blue years were cooler than the 1951–1980 average. Red years were hotter. Drag across the stripes to read any year from 1880 to 2024.</p>
+</div>
+<div class="stripes" id="s1"><canvas role="img" aria-label="One colored stripe per year from 1880 to 2024, shifting from blue to red as global temperature rises"></canvas><div class="mark"></div>
+<span class="chip" style="left:.8rem">1880: cooler</span><span class="chip" style="right:.8rem">2024: hotter</span></div>
+<div class="wrap">
+<div class="legend"></div><div class="lg"><span>cooler than average</span><span>much hotter than average</span></div>
+<p class="read" id="r1" aria-live="polite">The planet is now about 1.5 °C warmer than before industry, and 2024 was the first calendar year above that line.</p>
+
+<section style="padding-top:4rem">
+<h2>Now the stripes after 2024 are up to us</h2>
+<p class="lede" style="margin-bottom:0">Choose how much carbon the world keeps releasing and watch the next 75 years change color.</p>
+<div class="picker" id="picker" role="radiogroup" aria-label="Emissions path"></div>
+</div></div>
+<div class="stripes" id="s2"><canvas class="short" role="img" aria-label="Stripes from 1880 to 2100 for the chosen emissions path"></canvas><div class="mark"></div></div>
+<div class="wrap"><p class="read" id="r2" aria-live="polite"></p><div class="scn" id="scn"></div></div>
+
+<div class="band"><div class="wrap">
+<p class="sans" style="font-weight:800;font-size:1.3rem;margin:0">Since you opened this page, the world has released</p>
+<div class="big"><span id="tk">0</span> <span style="font-size:.3em">tonnes of CO₂</span></div>
+<p class="sub">That is about 1,200 tonnes every second, from burning fossil fuels and making cement (2024 estimate).</p>
+<p>Scientists estimated in 2025 that only about 170 billion tonnes more could be released from the start of 2025 for a 50% chance of staying under 1.5 °C. At today’s pace, that budget lasts roughly four years.</p>
+</div></div>
+
+<div class="wrap">
+<section>
+<h2>The air has changed in one lifetime</h2>
+<p style="max-width:38rem">Direct measurements at Mauna Loa, Hawaii started in 1958. The yearly wiggle is plants breathing in and out. The climb is us. Before industry, CO₂ sat near 280 parts per million.</p>
+<svg id="kc" viewBox="0 0 700 300" role="img" aria-label="Line chart of atmospheric CO2 rising from about 315 ppm in 1958 to about 423 ppm in 2024"></svg>
+</section>
+
+<section>
+<h2>Drag the sea upward</h2>
+<div class="flood"><div>
+<svg id="city" viewBox="0 0 700 340" role="img" aria-label="Illustration of a coastal city with rising water"></svg></div>
+<div>
+<div class="ctl"><output id="lv" for="sl">0.0 m</output><span class="sans" style="color:var(--muted)">sea level rise</span></div>
+<input id="sl" type="range" min="0" max="8" step="0.1" value="0" aria-label="Sea level rise in metres">
+<p class="sans" style="margin:1.1rem 0 .4rem;font-weight:800;font-size:1.15rem">Predicted year this level is reached</p>
+<div id="yr" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem" aria-live="polite"></div>
+<div class="pre"><button data-v="0.5">0.5 m: low path, 2100</button><button data-v="1">1 m: high path, 2100</button><button data-v="3">3 m</button><button data-v="7.4">7.4 m: all of Greenland</button></div>
+<p id="fl"></p></div></div>
+<p class="sans" style="color:var(--muted);font-size:.95rem">A stylized low-lying city, not a real map. Sea level already rose about 21 cm since 1880. Years are rough projections of rise above the 1995–2014 level, interpolated from IPCC AR6 median paths, and they carry wide uncertainty.</p>
+</section>
+
+<section>
+<h2>Where emissions come from</h2>
+<div class="two"><p>Greenhouse gases come from several places, not one. Power and heat make up the biggest slice, which is also where solar, wind and batteries are growing fastest.</p>
+<div class="bars">
+<div class="row"><span>Energy supply</span><i style="--s:.94"></i></div>
+<div class="row"><span>Industry</span><i style="--s:.7"></i></div>
+<div class="row"><span>Farming and land</span><i style="--s:.65"></i></div>
+<div class="row"><span>Transport</span><i style="--s:.44"></i></div>
+<div class="row"><span>Buildings</span><i style="--s:.18"></i></div>
+<small>Share of global emissions in 2019: 34, 24, 22, 15 and 6 percent (IPCC AR6).</small></div></div>
+</section>
+
+<section class="do">
+<h2>What actually moves the number</h2>
+<p><b class="sans">Clean electricity first.</b> It is the biggest single lever, and it cleans up cars, heating and industry as they plug in.</p>
+<p><b class="sans">Waste less energy.</b> Insulation, public transport and less food waste cut emissions and often save money.</p>
+<p><b class="sans">Protect forests and wetlands.</b> They store carbon and cool their regions. Keeping them is cheaper than replacing them.</p>
+<p><b class="sans">Keep talking about it.</b> The biggest choices belong to governments and companies. Voting and asking questions keeps the pressure on.</p>
+</section>
+
+<footer>
+<p>Stripes up to 2024 are drawn from NASA GISS decadal averages, smoothed between decades, so single record years are not shown. Future stripes illustrate the IPCC AR6 best estimates for 2081–2100 (1.4, 1.8, 2.7, 3.6, 4.4 °C above 1850–1900) and are not a forecast. “Above pre-industrial” adds about 0.25 °C to the 1951–1980 baseline. The CO₂ curve is built from published Mauna Loa decadal values with a typical seasonal cycle. Emission rate and budget: Global Carbon Project. Sea-level ranges: IPCC AR6 (2100 vs. 1995–2014).</p>
+<p>Warming stripes were created by climate scientist Ed Hawkins. Made for iSchool Talents 2026.</p>
+</footer></div>
+
+<script>
+(function(){
+var A=[[1885,-.2],[1895,-.22],[1905,-.27],[1915,-.28],[1925,-.2],[1935,-.12],[1945,0],[1955,-.02],[1965,-.03],[1975,.02],[1985,.17],[1995,.31],[2005,.53],[2015,.73],[2020,1],[2023,1.17],[2024,1.28]];
+var S=[{w:1.4,n:'Rapid cuts',sea:'0.28 to 0.55 m',t:'Emissions fall steeply this decade and reach net zero around 2050. The worst heat and ice-sheet risks stay out of reach, though many coral reefs remain in serious danger.'},
+{w:1.8,n:'Strong cuts',sea:'0.32 to 0.62 m',t:'Close to the Paris goal of well below 2 °C. Heatwaves that were once rare become routine in many regions.'},
+{w:2.7,n:'Middle road',sea:'0.44 to 0.76 m',t:'Emissions peak around mid-century, roughly where many national plans point. Droughts, floods and fire seasons get clearly worse, and seas keep rising for centuries.'},
+{w:3.6,n:'High emissions',sea:'0.56 to 0.90 m',t:'Emissions keep rising for decades. Heat stress becomes a regular threat in the tropics and farming regions lose reliable seasons.'},
+{w:4.4,n:'Very high',sea:'0.63 to 1.01 m',t:'Fossil fuel use grows unchecked. Many scientists see this as increasingly unlikely, but it shows what is at stake at the top end.'}];
+var cur=2;
+var ramp=[[-.6,'#1f4e79'],[-.3,'#5b93c0'],[0,'#cfdfe8'],[.4,'#f2d9b4'],[.8,'#e8975a'],[1.3,'#c73e2b'],[2.2,'#8e1a1c'],[4,'#3d0612']];
+function hx(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}
+function col(v){if(v<=ramp[0][0])return ramp[0][1];
+for(var i=1;i<ramp.length;i++)if(v<=ramp[i][0]){var a=ramp[i-1],b=ramp[i],t=(v-a[0])/(b[0]-a[0]),p=hx(a[1]),q=hx(b[1]);
+return'rgb('+[0,1,2].map(function(k){return Math.round(p[k]+(q[k]-p[k])*t)}).join(',')+')'}return ramp[7][1]}
+function hist(y){if(y<=1885)return-.2;for(var i=1;i<A.length;i++)if(y<=A[i][0]){var a=A[i-1],b=A[i];return a[1]+(b[1]-a[1])*(y-a[0])/(b[0]-a[0])}return 1.28}
+function val(y){if(y<=2024)return hist(y);return 1.28+(S[cur].w-.25-1.28)*(y-2024)/76}
+function mk(box,end,rd,animate){
+var cv=box.querySelector('canvas'),ctx=cv.getContext('2d'),m=box.querySelector('.mark'),N=end-1880+1,prog=animate?0:1;
+function draw(){var r=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*r;cv.height=h*r;ctx.setTransform(r,0,0,r,0,0);
+var lim=Math.floor(prog*N);for(var i=0;i<lim;i++){var x=Math.floor(i*w/N),x2=Math.floor((i+1)*w/N);ctx.fillStyle=col(val(1880+i));ctx.fillRect(x,0,x2-x+1,h)}}
+function show(e){var b=cv.getBoundingClientRect(),i=Math.max(0,Math.min(N-1,Math.floor((e.clientX-b.left)/b.width*N))),y=1880+i,v=val(y);
+m.style.left=i/N*100+'%';m.style.width=100/N+'%';m.style.opacity=.55;
+rd.innerHTML='<b>'+y+(y>2024?' (illustration)':'')+':</b> '+(v>=0?'+':'')+v.toFixed(1)+' °C vs. the 1951–1980 average, about '+(v+.25).toFixed(1)+' °C above pre-industrial.'}
+cv.addEventListener('pointermove',show);cv.addEventListener('pointerdown',show);cv.addEventListener('pointerleave',function(){m.style.opacity=0});
+var rz;addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(draw,60)});
+if(animate&&!matchMedia('(prefers-reduced-motion:reduce)').matches){var t0;(function f(ts){t0=t0||ts;prog=Math.min(1,(ts-t0)/1800);draw();if(prog<1)requestAnimationFrame(f)})(performance.now())}else{prog=1;draw()}
+return draw}
+mk(document.getElementById('s1'),2024,document.getElementById('r1'),true);
+var r2=document.getElementById('r2'),d2=mk(document.getElementById('s2'),2100,r2,false);
+var pk=document.getElementById('picker'),sc=document.getElementById('scn');
+function pick(){var s=S[cur];sc.innerHTML='<p><b class="sans">'+s.n+':</b> '+s.t+'</p><p class="sans" style="color:var(--muted)">Sea level by 2100: '+s.sea+' above the 1995–2014 level.</p>';
+r2.textContent='Drag across to see 2025 to 2100 under this path.';
+[].forEach.call(pk.children,function(b,i){b.setAttribute('aria-checked',i===cur)});d2()}
+S.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.setAttribute('role','radio');b.innerHTML='<strong>'+s.w.toFixed(1)+' °C</strong>'+s.n;b.onclick=function(){cur=i;pick()};pk.appendChild(b)});
+pick();
+/* scroll heat bar */
+var hb=document.getElementById('heat');
+function sp(){var p=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight);hb.style.transform='scaleY('+Math.min(1,p)+')'}
+addEventListener('scroll',sp,{passive:true});sp();
+/* CO2 ticker */
+var tk=document.getElementById('tk'),t0=Date.now();
+(function f(){tk.textContent=Math.floor((Date.now()-t0)/1000*1200).toLocaleString('en-US');requestAnimationFrame(f)})();
+/* Keeling curve */
+var K=[[1958,315],[1970,326],[1980,338.8],[1990,354],[2000,369.5],[2010,389],[2020,414],[2024.9,423]];
+function ppm(t){for(var i=1;i<K.length;i++)if(t<=K[i][0]){var a=K[i-1],b=K[i];return a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0])}return 423}
+var X=function(t){return 50+(t-1958)/(2025-1958)*630},Y=function(p){return 276-(p-270)*1.5},d='';
+for(var t=1958.2;t<2025;t+=1/12)d+=(d?'L':'M')+X(t).toFixed(1)+' '+Y(ppm(t)+3*Math.sin(2*Math.PI*(t-.3))).toFixed(1);
+var ks=document.getElementById('kc');
+ks.innerHTML='<line x1="50" x2="680" y1="'+Y(280)+'" y2="'+Y(280)+'" stroke="currentColor" stroke-dasharray="4 5" opacity=".5"/><text x="50" y="'+(Y(280)+18)+'">280 ppm: before industry</text>'+
+'<path id="kp" d="'+d+'" fill="none" stroke="var(--hot)" stroke-width="2.5"/>'+
+'<text x="50" y="'+(Y(315)-14)+'">1958: 315 ppm</text><text x="680" y="'+(Y(423)-22)+'" text-anchor="end" style="font-weight:800;fill:var(--ink);font-size:15px">2024: about 423 ppm</text>';
+var kp=document.getElementById('kp'),L=kp.getTotalLength();
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){kp.style.strokeDasharray=L;kp.style.strokeDashoffset=L;
+new IntersectionObserver(function(e,o){if(e[0].isIntersecting){kp.style.transition='stroke-dashoffset 2.6s ease-out';kp.style.strokeDashoffset=0;o.disconnect()}},{threshold:.5}).observe(ks)}
+/* Flood city */
+var c=document.getElementById('city'),h='<rect x="0" y="318" width="700" height="22" fill="currentColor" opacity=".85"/><polygon points="180,286 700,286 700,340 180,340" fill="currentColor" opacity=".9"/>';
+for(var i=0;i<24;i++){var r=Math.abs(Math.sin(i*12.9898)*43758)%1,bh=40+r*r*160+(i%7==3?40:0),bw=14+(i%3)*3;h+='<rect x="'+(190+i*21)+'" y="'+(286-bh)+'" width="'+bw+'" height="'+bh+'" fill="currentColor" opacity="'+(.65+.2*(i%2))+'"/>'}
+h+='<rect id="w" x="-20" y="300" width="740" height="200" fill="#3d86b8" opacity=".72"/><text x="8" y="296">harbor</text>';
+c.innerHTML=h;c.style.color='var(--ink)';
+var sl=document.getElementById('sl'),lv=document.getElementById('lv'),fl=document.getElementById('fl'),w=document.getElementById('w');
+function fx(v){return v<.4?'Today. Coastal floods are already more frequent, but the city stays dry.':v<.9?'About what the lowest path reaches by 2100. Ports and low streets need new defenses, and storm surges reach much farther inland.':v<1.9?'The high-emissions range for 2100. Floods that once came once a century could happen every year in many coastal places.':v<5?'Not expected by 2100, but possible by 2150 or later if the big ice sheets collapse. Whole districts and several island nations would be lost.':'Roughly what the Greenland ice sheet holds if it melted fully, over centuries to thousands of years. Only the tallest towers would stand.'}
+var PR=[['Emissions stay high',[[2005,0],[2020,.08],[2050,.23],[2100,.77],[2150,1.4],[2200,2],[2300,3]]],['Middle road',[[2005,0],[2020,.08],[2050,.2],[2100,.56],[2150,.95],[2200,1.25],[2300,1.8]]],['Rapid cuts',[[2005,0],[2020,.08],[2050,.19],[2100,.44],[2150,.62],[2200,.75],[2300,1]]]];
+function yf(p,v){if(v<=0)return 'now';for(var i=1;i<p.length;i++)if(v<=p[i][1]){var a=p[i-1],b=p[i];return String(Math.round(a[0]+(b[0]-a[0])*(v-a[1])/(b[1]-a[1])))}return null}
+function up(){var v=+sl.value;lv.textContent=v.toFixed(1)+' m';w.style.transform='translateY('+(-v*14)+'px)';fl.textContent=fx(v);
+document.getElementById('yr').innerHTML=PR.map(function(p){var y=yf(p[1],v);return '<div style="border-top:3px solid var(--rule);padding-top:.5rem"><div class="sans" style="font-size:.9rem;color:var(--muted);line-height:1.25">'+p[0]+'</div><div class="sans" style="font-weight:800;font-size:'+(y&&y.length<5?'2.2rem':'1.1rem')+';letter-spacing:-.02em;margin-top:.2rem">'+(y?(y.length<5&&y!=='now'?'~'+y:y==='now'?'Now':y):'After 2300')+'</div></div>'}).join('')}
+sl.oninput=up;[].forEach.call(document.querySelectorAll('.pre button'),function(b){b.onclick=function(){sl.value=Math.min(8,+b.dataset.v);up()}});up();
+})();
+</script></body></html>
